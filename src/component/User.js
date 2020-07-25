@@ -10,11 +10,12 @@ class User extends Component {
       this.setState({ isVisible: !this.state.isVisible });
    };
    handleDelete = (id, deleteUser) => {
-      deleteUser(id);
+      // deleteUser(id);
+      // dispatch
    };
    render() {
       // Destructing
-      const { name, department, salary, deleteUser, id } = this.props;
+      const { name, department, salary, id } = this.props;
       const { isVisible } = this.state;
       return (
          <div className="col-md-8 mb-4">
@@ -23,7 +24,7 @@ class User extends Component {
                   <h4 className="d-inline" onClick={this.onClickEvent}>
                      {name}
                   </h4>
-                  <h3 onClick={() => this.handleDelete(id, deleteUser)}>Delete</h3>
+                  <h3 onClick={() => this.handleDelete(id)}>Delete</h3>
                </div>
                {isVisible ? (
                   <div className="card-body">
