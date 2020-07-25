@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import UserConsumer from '../context';
+import axios from 'axios';
 class User extends Component {
    state = {
       isVisible: false,
@@ -9,7 +10,8 @@ class User extends Component {
    onClickEvent = () => {
       this.setState({ isVisible: !this.state.isVisible });
    };
-   handleDelete = (id, dispatch) => {
+   handleDelete = async (id, dispatch) => {
+      await axios.delete(`http://localhost:3001/users/${id}`);
       dispatch({ type: 'DELETE_USER', payload: id });
    };
    render() {

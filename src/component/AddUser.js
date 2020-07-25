@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { motion } from 'framer-motion';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import UserConsumer from '../context';
+import axios from 'axios';
 class AddUser extends Component {
    state = {
       isVisible: true,
@@ -21,16 +22,16 @@ class AddUser extends Component {
          [e.target.name]: e.target.value,
       });
    };
-   addUser = (dispatch, e) => {
+   addUser = async (dispatch, e) => {
       e.preventDefault();
       const { name, department, salary } = this.state;
       const newUser = {
-         id: uuidv4(),
          name,
          salary,
          department,
       };
-      dispatch({ type: 'ADD_USER', payload: newUser });
+      const response = await axios.post('http://localhost:3001/users', newUser);
+      dispatch({ type: 'ADD_USER', payload: response.data });
    };
    render() {
       const variants = {
