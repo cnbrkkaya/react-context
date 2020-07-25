@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import UserConsumer from '../context';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 class User extends Component {
    state = {
       isVisible: false,
@@ -34,8 +35,11 @@ class User extends Component {
                         </div>
                         {isVisible ? (
                            <div className="card-body">
-                              <p className="card-text">Maaş : {salary}</p>
+                              <p className="card-text">Salary : {salary}</p>
                               <p className="card-text">Department : {department}</p>
+                              <Link to={`edit/${id}`} className="btn btn-block btn-dark">
+                                 Update
+                              </Link>
                            </div>
                         ) : null}
                      </div>

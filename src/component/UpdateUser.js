@@ -4,13 +4,26 @@ import { motion } from 'framer-motion';
 import UserConsumer from '../context';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-class AddUser extends Component {
+class UpdateUser extends Component {
    state = {
       isVisible: true,
       name: '',
       salary: '',
       department: '',
       redirect: '',
+   };
+   componentDidMount() {
+      this.getUser();
+   }
+
+   getUser = async () => {
+      const userId = this.props.match.params.id;
+      const response = await axios.get(`http://localhost:3001/users/${userId}`);
+      this.setState({
+         name: response.data.name,
+         salary: response.data.salary,
+         department: response.data.department,
+      });
    };
 
    handleVisible = () => {
@@ -24,18 +37,20 @@ class AddUser extends Component {
          [e.target.name]: e.target.value,
       });
    };
-   addUser = async (dispatch, e) => {
+   updateUser = async (dispatch, e) => {
       e.preventDefault();
+      const { id } = this.props.match.params;
       const { name, department, salary } = this.state;
-      const newUser = {
+      const updatedUser = {
          name,
          salary,
          department,
       };
-      const response = await axios.post('http://localhost:3001/users', newUser);
-      dispatch({ type: 'ADD_USER', payload: response.data });
+      const response = await axios.put(`http://localhost:3001/users/${id}`, updatedUser);
+
+      dispatch({ type: 'UPDATE_USER', payload: response.data });
       // this.setState({ name: '', salary: '', department: '', redirect: '/' });
-      this.props.history.push('/');
+      this.props.history.push('');
    };
    render() {
       const variants = {
@@ -66,7 +81,7 @@ class AddUser extends Component {
                      <motion.div initial="hidden" animate={isVisible ? 'visible' : 'hidden'} variants={variants}>
                         <div className="card">
                            <div className="card-header">
-                              <h4>Add User Form</h4>
+                              <h4>Update User Form</h4>
                            </div>
                            <div className="card-body">
                               <form>
@@ -82,7 +97,7 @@ class AddUser extends Component {
                                     <label htmlFor="salary">Salary</label>
                                     <input type="text" name="salary" id="salary" placeholder="Enter a salary" className="form-control" value={salary} onChange={this.handleChange} />
                                  </div>
-                                 <button onClick={(event) => this.addUser(dispatch, event)} type="submit" className="btn btn-danger btn-block">
+                                 <button onClick={(event) => this.updateUser(dispatch, event)} type="submit" className="btn btn-danger btn-block">
                                     Add
                                  </button>
                               </form>
@@ -96,4 +111,4 @@ class AddUser extends Component {
       );
    }
 }
-export default AddUser;
+export default UpdateUser;
