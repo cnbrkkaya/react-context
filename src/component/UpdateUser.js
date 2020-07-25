@@ -11,6 +11,7 @@ class UpdateUser extends Component {
       salary: '',
       department: '',
       redirect: '',
+      error: false,
    };
    componentDidMount() {
       this.getUser();
@@ -37,6 +38,15 @@ class UpdateUser extends Component {
          [e.target.name]: e.target.value,
       });
    };
+
+   validateUser = () => {
+      const { name, salary, department } = this.state;
+
+      if (name === '' || salary === '' || department === '') {
+         return false;
+      }
+      return true;
+   };
    updateUser = async (dispatch, e) => {
       e.preventDefault();
       const { id } = this.props.match.params;
@@ -46,6 +56,10 @@ class UpdateUser extends Component {
          salary,
          department,
       };
+      if (!this.validateUser()) {
+         this.setState({ error: true });
+         return;
+      }
       const response = await axios.put(`http://localhost:3001/users/${id}`, updatedUser);
 
       dispatch({ type: 'UPDATE_USER', payload: response.data });
@@ -65,7 +79,7 @@ class UpdateUser extends Component {
             },
          },
       };
-      const { isVisible, name, salary, department } = this.state;
+      const { isVisible, name, salary, department, error } = this.state;
       // if (this.state.redirect) {
       //    return <Redirect to={this.state.redirect} />;
       // }
@@ -83,6 +97,7 @@ class UpdateUser extends Component {
                            <div className="card-header">
                               <h4>Update User Form</h4>
                            </div>
+                           {error ? <div className="alert alert-danger">alertt</div> : null}
                            <div className="card-body">
                               <form>
                                  <div className="form-group">

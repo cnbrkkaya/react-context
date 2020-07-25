@@ -11,6 +11,7 @@ class AddUser extends Component {
       salary: '',
       department: '',
       redirect: '',
+      error: false,
    };
 
    handleVisible = () => {
@@ -24,6 +25,14 @@ class AddUser extends Component {
          [e.target.name]: e.target.value,
       });
    };
+   validateForm = () => {
+      const { name, salary, department } = this.state;
+
+      if (name === '' || salary === '' || department === '') {
+         return false;
+      }
+      return true;
+   };
    addUser = async (dispatch, e) => {
       e.preventDefault();
       const { name, department, salary } = this.state;
@@ -32,6 +41,11 @@ class AddUser extends Component {
          salary,
          department,
       };
+      if (!this.validateForm()) {
+         this.setState({ error: true });
+         return;
+      }
+
       const response = await axios.post('http://localhost:3001/users', newUser);
       dispatch({ type: 'ADD_USER', payload: response.data });
       // this.setState({ name: '', salary: '', department: '', redirect: '/' });
@@ -50,7 +64,7 @@ class AddUser extends Component {
             },
          },
       };
-      const { isVisible, name, salary, department } = this.state;
+      const { isVisible, name, salary, department, error } = this.state;
       // if (this.state.redirect) {
       //    return <Redirect to={this.state.redirect} />;
       // }
@@ -68,6 +82,7 @@ class AddUser extends Component {
                            <div className="card-header">
                               <h4>Add User Form</h4>
                            </div>
+                           {error ? <div className="alert alert-danger">alertt</div> : null}
                            <div className="card-body">
                               <form>
                                  <div className="form-group">
